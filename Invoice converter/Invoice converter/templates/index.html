@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice Maker</title>
+    <link rel="stylesheets" href="/static/style.css" />
+  </head>
+  <body>
+    <h1>Invoice Maker</h1>
+    <form action="/generate" method="POST">
+      <h2>Create Invoice</h2>
+      <label for="invoice_number">Invoice Number:</label>
+      <input type="text" id="invoice_number" name="invoice_number" required />
+
+      <label for="customer_name">Customer Name:</label>
+      <input type="text" id="customer_name" name="customer_name" required />
+
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" required />
+
+      <h3>Items</h3>
+      <div id="items">
+        <div class="item">
+          <input type="text" name="description_0" placeholder="Description" />
+          <input
+            type="number"
+            name="quantity_0"
+            placeholder="Quantity"
+            min="1"
+          />
+          <input
+            type="number"
+            name="price_0"
+            placeholder="Price"
+            step="0.01"
+            min="0"
+          />
+        </div>
+      </div>
+      <input type="hidden" id="item_count" name="item_count" value="1" />
+      <button type="button" onclick="addItem()">Add Item</button>
+      <button type="submit">Generate Invoice</button>
+    </form>
+
+    <form action="/upload" method="POST" ectype="multipart/form-data">
+      <h2>Upload Invoice Data</h2>
+      <input type="file" name="file" accept=".csv, .json" />
+      <button type="submit">Upload and Generate</button>
+    </form>
+
+    <script>
+      let itemCount = 1;
+      function addItem() {
+        const items = document.getElementById("items");
+        const newItem = document.createElement("div");
+        newItem.classList.add("item");
+        newItem.innerHTML = `
+                <input type="text" name="description_${itemCount}" placeholder="Description">
+                <input type="number" name="quantity_${itemCount}" placeholder="Quantity" min="1">
+                <input type="number" name="price_${itemCount}" placeholder="Price" step="0.01" min="0">
+            `;
+        items.appendChild(newItem);
+        document.getElementById("item_count").value = ++itemCount;
+      }
+    </script>
+  </body>
+</html>
